@@ -1,0 +1,71 @@
+/mnt/c/Users/Alec/Desktop/projects/cs61/pset_dir/cs61-f20-psets-youoralovedone/pset3
+0x1c0000
+
+
+// int f = -1;
+uintptr_t new_page_addr = (uintptr_t) kalloc(PAGESIZE);
+// if (new_page_addr)
+// {
+//     // try mapping only if new_page_addr didnt fail
+//     f = c_it.try_map(new_page_addr, p_it.perm());
+// }
+// // map or kalloc fail
+// if (f < 0)
+// {
+//     for (vmiter f_it(ptable[child_pid].pagetable); f_it.va() < MEMSIZE_VIRTUAL; f_it += PAGESIZE)
+//     {
+//         if (f_it.va() < PROC_START_ADDR)
+//         {
+//             // dont free kernel/console memory
+//             continue;
+//         }
+//         else if (f_it.perm())
+//         {
+//             // free process memory
+//             kfree((void *) f_it.pa());
+//         }
+//     }
+//
+//     // free process pagetable
+//     for (ptiter f_it(ptable[child_pid].pagetable); f_it.va() < MEMSIZE_VIRTUAL; f_it.next())
+//     {
+//         kfree((void *) f_it.pa());
+//     }
+//     // free topmost page table page
+//     kfree((void *) ptable[child_pid].pagetable);
+//     ptable[child_pid].state = P_FREE;
+//
+//     if (new_page_addr)
+//     {
+//         // free if allocated successfully but map fails
+//         kfree((void *) new_page_addr);
+//     }
+//
+//     return -1;
+// }
+
+
+// // free process memory
+// for (vmiter v_it(current->pagetable); v_it.va() < MEMSIZE_VIRTUAL; v_it += PAGESIZE)
+// {
+//     if (v_it.va() < PROC_START_ADDR)
+//     {
+//         // dont free kernel/console memory
+//         continue;
+//     }
+//     else if (v_it.perm())
+//     {
+//         // free process memory
+//         kfree((void *) v_it.pa());
+//     }
+// }
+//
+// // free process page table
+// for (ptiter p_it(current->pagetable); p_it.va() < MEMSIZE_VIRTUAL; p_it.next())
+// {
+//     kfree((void *) p_it.pa());
+// }
+// // free topmost page table page
+// kfree((void *) current->pagetable);
+//
+// current->state = P_FREE;

@@ -1,0 +1,537 @@
+read:
+// size_t nread = 0;
+// while (nread != sz) {
+//     int ch = io61_readc(f);
+//     if (ch == EOF) {
+//         break;
+//     }
+//     buf[nread] = ch;
+//     ++nread;
+// }
+// return nread;
+
+if (fd->pos + sz < CACHESIZE)
+{
+    memcpy(buf, cache + fd->pos, sz);
+    fd->pos += sz;
+    return sz;
+}
+else
+{
+    memcpy(buf, cache + fd->pos, sz - CACHESIZE + fd->pos);
+    f->pos = 0;
+    read(f->fd, cache, CACHESIZE);
+    memcpy(buf + sz - CACHESIZE + fd->pos, cache + sz - CACHESIZE - fd->pos)
+}
+
+
+// if ()
+// {
+//     f->pos = sz;
+//     f->tag += read(f->fd, cache, CACHESIZE);
+// }
+// else
+// {
+//     f->pos += sz;
+// }
+//
+// memcpy(buf, cache, sz);
+// return sz;
+
+
+
+
+// char cache[CACHESIZE]; // cache for file
+// // looked at this: https://cs61.seas.harvard.edu/site/2019/Section5/
+// off_t tag; // file offset of first byte in cache (CACHESIZE aligned)
+// off_t end_tag; // file offest of last byte in cache + 1
+// off_t pos; // tag + position in cache
+// bool empty;
+
+
+
+// f->tag = 0;
+// f->end_tag = CACHESIZE;
+// f->pos = 0;
+// f->empty = true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Note: This function never returns -1 because `io61_readc`
+// does not distinguish between error and end-of-file.
+// Your final version should return -1 if a system call indicates
+// an error.
+
+// size_t ncopied = 0;
+// size_t nto_read = sz;
+//
+// // read into buf until nto_read < CACHESIZE
+// while (ncopied < sz)
+// {
+//     if (f->pos > f->end_tag || f->empty)
+//     {
+//         int nread = read(f->fd, f->cache, CACHESIZE);
+//         if (nread == -1)
+//         {
+//             break;
+//         }
+//         f->tag += CACHESIZE;
+//         f->end_tag += CACHESIZE;
+//         f->pos = 0;
+//         f->empty = false;
+//     }
+//
+//     size_t chunk = std::min(nto_read, (size_t) CACHESIZE);
+//     memcpy(buf + ncopied, f->cache + f->pos, chunk);
+//     ncopied += chunk;
+//     nto_read -= chunk;
+//
+//     f->pos += chunk;
+// }
+//
+// return ncopied;
+
+// read(f->fd, cache, CACHESIZE);
+// sz -= CACHESIZE;
+// nread += CACHESIZE;
+// memcpy(buf + nread, cache, CACHESIZE);
+
+// size_t overflow = (f->pos + sz) % CACHESIZE;
+// memcpy(buf, cache[f->pos], overflow);
+// f->pos += overflow;
+
+
+// read(f->fd, cache, CACHESIZE);
+
+
+if (!sz)
+{
+    return 0;
+}
+
+long nread = 0;
+while (sz >= CACHESIZE)
+{
+    read(f->fd, buf + nread, CACHESIZE);
+    nread += CACHESIZE;
+}
+if (!nread)
+read(f->fd, cache, CACHESIZE);
+
+return sz;
+
+
+// read(f->fd, cache, CACHESIZE);
+// f->tag += CACHESIZE;
+// f->end_tag += CACHESIZE;
+// f->pos = 0;
+//
+// memcpy(buf, cache[f->pos], sz);
+// f->pos += sz;
+
+
+
+    // read leftovers into cache?
+
+    // memcpy with the remainder here
+
+
+
+    // read into buf until nto_read < CACHESIZE
+    while (nread < sz)
+    {
+        // if read returns -1, break
+        if ((off_t) (f->pos + nto_read) < f->end_tag)
+        {
+            memcpy(buf, f->cache, nto_read);
+            nread += nto_read;
+            break;
+        }
+        else
+        {
+            size_t fail = read(f->fd, f->cache, CACHESIZE);
+            if (!fail)
+            {
+                break;
+            }
+
+            memcpy(buf, f->cache, CACHESIZE);
+            nto_read -= CACHESIZE;
+            nread += CACHESIZE;
+        }
+    }
+
+    return nread;
+
+
+    tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+    ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // unsigned char buf[1];
+    // if (read(f->fd, buf, 1) == 1) {
+    //     return buf[0];
+    // } else {
+    //     return EOF;
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+    final io61_read attempt:
+    size_t nread = 0;
+    size_t to_read = sz;
+
+    while (nread < sz)
+    {
+        size_t to_cpy = std::min(to_read, (size_t) CACHESIZE - f->pos);
+        memcpy(buf + nread, f->cache + f->pos, to_cpy);
+        f->pos += to_cpy;
+        nread += to_cpy;
+        to_read -= to_cpy;
+
+        if (f->pos >= CACHESIZE)
+        {
+            int fail = read(f->fd, f->cache, CACHESIZE);
+            if (fail == -1)
+            {
+                return -1;
+            }
+
+            f->tag += CACHESIZE;
+            f->end_tag += fail;
+            f->pos = 0;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+i give up lol
+// size_t nread = 0;
+// size_t to_read = sz;
+
+// while (nread < sz)
+// {
+//     // size_t to_cpy = std::min(to_read, (size_t) f->end_tag - f->pos_tag);
+//     // memcpy(&buf[nread], &f->cache[f->tag - f->pos_tag], to_cpy);
+//     // f->pos_tag += to_cpy;
+//     // nread += to_cpy;
+//     // to_read -= to_cpy;
+//     //
+//     // if (f->pos_tag >= f->end_tag)
+//     // {
+//     //     int fail = read(f->fd, f->cache, CACHESIZE);
+//     //     if (fail == -1)
+//     //     {
+//     //         return -1;
+//     //     }
+//     //     else if (fail == 0)
+//     //     {
+//     //         break;
+//     //     }
+//     //
+//     //     f->tag += CACHESIZE;
+//     //     f->end_tag += fail;
+//     //     f->pos_tag = f->tag;
+//     // }
+//
+//     // flush_cache();
+// }
+
+// return nread;
+
+size_t nread = 0;
+size_t ntoread = sz;
+
+// ensure start_tag CACHESIZE aligned at start
+if (f->pos != 0)
+{
+    size_t szflushed = f->end_tag - f->start_tag - f->pos;
+    memcpy(buf, &f->cache[f->pos], szflushed);
+    nread += szflushed;
+    ntoread -= szflushed;
+
+    // fill cache
+    int read_e = read(f->fd, f->cache, CACHESIZE);
+    if (read_e == -1)
+    {
+        return -1;
+    }
+    else if (read_e == 0)
+    {
+        return nread;
+    }
+    f->start_tag += CACHESIZE;
+    f->end_tag += read_e;
+    f->pos = 0;
+}
+
+// now everything is CACHESIZE aligned, loop through all of sz
+while (ntoread > CACHESIZE)
+{
+    int read_e = read(f->fd, &buf[nread], CACHESIZE);
+    if (read_e == -1)
+    {
+        return -1;
+    }
+
+    nread += read_e;
+    ntoread -= read_e;
+
+    f->start_tag += CACHESIZE;
+    f->end_tag += read_e;
+    f->pos = 0;
+}
+
+// ensure start_tag
+if (ntoread)
+{
+    int read_e = read(f->fd, f->cache, CACHESIZE);
+    if (read_e == -1)
+    {
+        return -1;
+    }
+    else if (read_e == 0)
+    {
+        return nread;
+    }
+    f->start_tag += CACHESIZE;
+    f->end_tag += read_e;
+    f->pos = 0;
+
+    size_t szflushed = f->end_tag - f->start_tag - f->pos;
+    memcpy(&buf[nread], f->cache, szflushed);
+    nread += szflushed;
+    ntoread -= szflushed;
+}
+
+return nread;
+
+
+
+
+
+// int fill_cache(io61_file *f)
+// {
+//     // if -1, read failed
+//     // if 0, done reading
+//     int nread = read(f->fd, f->cache, CACHESIZE);
+//     if (nread == -1)
+//     {
+//         // check errno?
+//         return -1;
+//     }
+//     else if (nread == 0)
+//     {
+//         return 0;
+//     }
+//     f->tag += CACHESIZE;
+//     f->end_tag += nread;
+//     f->pos_tag = f->tag;
+// }
+//
+// size_t flush_cache(io61_file *f, char *buf)
+// {
+//     uintptr_t start = f->cache + f->tag - f->pos_tag;
+//     uintptr_t sz = f->end_tag - f->pos_tag;
+//     if (!sz)
+//     {
+//         return -1;
+//     }
+//     memcpy(buf, (void *) start, sz);
+//     return end - start; // return amount flushed
+// }
+
+
+// size_t nread = 0;
+// while (nread < sz)
+// {
+//     // reached end of cache
+//     if (f->pos_tag == f->end_tag)
+//     {
+//         // int overflow = f->pos_tag - f->end_tag;
+//         if (io61_fill(f) == -1)
+//         {
+//             // read failure
+//             return -1;
+//         }
+//         // reached end of file
+//         // f->pos_tag += overflow;
+//         if (f->pos_tag == f->end_tag)
+//         {
+//             break;
+//         }
+//     }
+//
+//     // FIX THIS
+//     // sz could be less than f->end_tag - f->pos_tag
+//     // f->end_tag - f->pos_tag could be invalid since
+//     // sometimes you wanna read the overflow from last time
+//     size_t n_tocopy = std::min(sz, (size_t) (f->end_tag - f->pos_tag));
+//     fprintf(stderr, "n_tocopy %li\n", n_tocopy);
+//     fprintf(stderr, "f->tag %li\n", f->tag);
+//     // causing memory corruption
+//     memcpy(&buf[nread], &(f->cache[f->pos_tag - f->tag]), n_tocopy);
+//
+//     /// STEPING OVER f->pos_tag == f->end_tag????
+//     f->pos_tag += n_tocopy;
+//     nread += n_tocopy;
+//
+//     // buf[nread] = f->cache[f->pos_tag - f->tag];
+//     // ++f->pos_tag;
+//     // ++nread;
+// }
+
+
+if (mode == O_RDONLY)
+{
+    // // prefetch if read only
+    // int fail = read(f->fd, f->cache, CACHESIZE);
+    // if (fail == -1)
+    // {
+    //     return nullptr;
+    // }
+    //
+    // f->tag = 0;
+    // f->end_tag = fail;
+    // f->pos_tag = f->tag;
+
+    // fill_cache(f);
+}
+
+
+
+
+// unsigned char buf[1];
+// buf[0] = ch;
+// if (write(f->fd, buf, 1) == 1) {
+//     return 0;
+// } else {
+//     return -1;
+// }
+
+
+
+if (f->mode == O_RDONLY)
+{
+    if (io61_fill(f) == -1)
+    {
+        return -1;
+    }
+}
+else if(f->mode == O_WRONLY)
+{
+    if (io61_flush(f) == -1)
+    {
+        return -1;
+    }
+}
+
+
+
+
+// off_t r = lseek(f->fd, (off_t) pos, SEEK_SET);
+// if (r == (off_t) pos) {
+//     return 0;
+// } else {
+//     return -1;
+// }
+seek
+
+
+
+
+
+
+int overflow = pos % CACHESIZE;
+if (f->mode == O_RDONLY)
+{
+    if (pos >= f->tag && pos < f->end_tag)
+    {
+        f->pos_tag = pos;
+    }
+    off_t seekto = pos - overflow;
+    if (seekto < 0)
+    {
+        seekto = 0;
+    }
+    off_t offset = lseek(f->fd, seekto, SEEK_SET);
+    if (offset == -1)
+    {
+        return -1;
+    }
+    f->end_tag = offset;
+    if (io61_fill(f) == -1)
+    {
+        return -1;
+    }
+    f->pos_tag += overflow;
+}
+else if(f->mode == O_WRONLY)
+{
+    if (io61_flush(f) == -1)
+    {
+        return -1;
+    }
+
+    off_t offset = lseek(f->fd, pos, SEEK_SET);
+    if (offset == -1)
+    {
+        return -1;
+    }
+
+    f->pos_tag = f->tag = offset;
+    f->end_tag = f->tag + CACHESIZE;
+}

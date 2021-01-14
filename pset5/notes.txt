@@ -1,0 +1,376 @@
+// int args_sz = 0;
+// for (std::string &s : this->args)
+// {
+//     args_sz += s.size();
+// }
+// for (std::string &s : this->args)
+// {
+//
+// }
+
+int sz = std::accumulate(this->args.begin(), this->args.end(), 0,
+    [](int acm, std::string &s){ return acm + s.size(); }
+);
+
+char args_cstr[sz];
+int nread = 0;
+for (std::string &s : this->args)
+{
+    memcpy(&args_cstr[nread], (char *) s.c_str(), s.size());
+    nread += s.size();
+}
+
+execvp((char *) args_cstr[0], (char **) args_cstr[1]);
+
+// child executes command
+// std::transform(this->args.begin(), this->args.end(), std::back_inserter(this->args),
+//     [](std::string &s){
+//         char *c_str = new char[s.size() + 1];
+//         std::strcpy(c_str, s.c_str());
+//         return c_str;
+//     }
+// );
+
+// const char *file_cstr = this->args[0].c_str();
+// char* const args_cstr[this->args.size()];
+// for (int i = 0, n = this->args.size(); i < n; i++)
+// {
+//     args_cstr[i] = this->args[i].c_str();
+// }
+
+// // pop file from args
+// const char *file_cstr = this->args[0].c_str();
+// this->args.erase(this->args.begin());
+
+
+
+
+
+
+// if ()
+// {
+//     // encountered shell token
+//     commands.push_back(c_command);
+//     c_command->op = it.type();
+//     c_command = nullptr;
+// }
+
+
+// command* c = nullptr;
+// std::vector<command *> commands;
+
+
+
+
+
+
+
+
+
+
+
+// // copy args vector to args array
+// int args_len = this->args.size();
+// const char *args_cstr[args_len];
+// for (int i = 0; i < args_len; i++)
+// {
+//     args_cstr[i] = this->args[i].c_str();
+// }
+//
+// execvp(args_cstr[0], &((char *const *) args_cstr)[1]);
+// printf("got here\n");
+
+
+
+// int status;
+// waitpid(p, &status, 0);
+
+
+command *current = this;
+while (current->next)
+{
+    delete current;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// void run_list(list *l)
+// {
+//     // runs list at l->start
+//     if (l->background)
+//     {
+//         // create background shell
+//         pid_t p = fork();
+//         if (p == 0)
+//         {
+//             for (command *c = l->start; c != nullptr; c = c->next)
+//             {
+//                 run_command(c);
+//             }
+//         }
+//         else
+//         {
+//             return;
+//         }
+//     }
+//     else
+//     {
+//         for (command *c = l->start; c != nullptr; c = c->next)
+//         {
+//             run_command(c);
+//         }
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if (allocate_new)
+{
+    current_command->next = new command;
+    current_command->next->prev = current_command;
+    current_command = current_command->next;
+    allocate_new = false;
+}
+
+// append to command list
+if (it.type() == TYPE_NORMAL)
+{
+    current_command->args.push_back(it.str());
+}
+else
+{
+    // append to line vector
+    if (it.type() == TYPE_SEQUENCE)
+    {
+        line.push_back(current_list);
+        current_list = new list;
+    }
+    else if (it.type() == TYPE_BACKGROUND)
+    {
+        current_list->background = true;
+        line.push_back(current_list);
+        current_list = new list;
+    }
+
+    current_command->op = it.type();
+    allocate_new = true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //  && !(c->op == TYPE_AND || c->op == TYPE_OR))
+
+
+std::vector<list *> line;
+
+list *current_list = new list;
+command *current_command = new command;
+current_list->start = current_command;
+
+shell_parser parser(s);
+for (shell_token_iterator it = parser.begin(); it != parser.end(); ++it) {
+    if (it.type() == TYPE_NORMAL)
+    {
+        current_command->args.push_back(it.str());
+    }
+    else
+    {
+        shell_token_iterator check = it;
+        ++check;
+        if (check != parser.end())
+        {
+            // append to command list
+            current_command->op = it.type();
+            current_command->next = new command;
+            current_command->next->prev = current_command;
+            current_command = current_command->next;
+        }
+        else
+        {
+            line.push_back(current_list);
+            break;
+        }
+
+        // append to line vector
+        if (it.type() == TYPE_SEQUENCE)
+        {
+            line.push_back(current_list);
+            current_list = new list;
+            current_list->start = current_command;
+        }
+        else if (it.type() == TYPE_BACKGROUND)
+        {
+            current_list->background = true;
+            line.push_back(current_list);
+            current_list = new list;
+            current_list->start = current_command;
+        }
+    }
+}
+// need to push current_list even when command doesnt end in ;
+
+return line;
+
+
+
+
+
+
+
+
+
+
+
+
+// std::transform(this->args.begin(), this->args.end(), std::back_inserter(argv),
+//     [](std::string &s){ return s.c_str(); }
+// );
+
+// argv array must be null terminated
+
+
+
+
+
+// command *c = this;
+// while (c != nullptr)
+// {
+//     command *tmp = this->next;
+//     delete this->next;
+//     c = tmp;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // if (c->redir_type != -1)
+    // {
+    //     if (c->redir_type == '>')
+    //     {
+    //         int f = open(c->filename.c_str(), O_WRONLY | O_CREAT, 0666);
+    //         if (f == -1)
+    //         {
+    //             puts("No such file or directory");
+    //             c->exit_status = EXIT_FAILURE;
+    //             return false;
+    //         }
+    //         c->write_fd = f;
+    //     }
+    //     else if (c->redir_type == '<')
+    //     {
+    //         int f = open(c->filename.c_str(), O_RDONLY);
+    //         if (f == -1)
+    //         {
+    //             puts("No such file or directory");
+    //             c->exit_status = EXIT_FAILURE;
+    //             return false;
+    //         }
+    //         c->read_fd = f;
+    //     }
+    // }
